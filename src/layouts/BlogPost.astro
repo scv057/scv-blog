@@ -3,11 +3,11 @@ import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import Base from './Base.astro';
 import FormattedDate from '../components/FormattedDate.astro';
-import { useTranslations, type Lang } from '../i18n/utils';
+import { useTranslations, localizedPath, categoryLabel, type Lang } from '../i18n/utils';
 
 type Props = CollectionEntry<'blog'>['data'] & { minutes?: number };
 
-const { title, description, pubDate, updatedDate, heroImage, minutes } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, minutes, category } = Astro.props;
 const lang = (Astro.currentLocale ?? 'en') as Lang;
 const t = useTranslations(lang);
 ---
@@ -16,7 +16,19 @@ const t = useTranslations(lang);
 	<main class="wrap article">
 		<article>
 			<header class="article-head">
-				<p class="eyebrow mono">{t('article.eyebrow')}</p>
+				<p class="eyebrow mono">
+					{t('article.eyebrow')}
+					{
+						category && (
+							<>
+								{' · '}
+								<a href={localizedPath(lang, `topics/${category}`)}>
+									{categoryLabel(lang, category)}
+								</a>
+							</>
+						)
+					}
+				</p>
 				<h1>{title}</h1>
 				{description && <p class="standfirst">{description}</p>}
 				<div class="byline">

@@ -3,6 +3,7 @@ title: 'Pair-building this blog with an AI'
 description: 'A plan I had postponed for years, finished in an afternoon: empty directory to a bilingual site in production. Notes on the process — and a few honest faceplants.'
 pubDate: 'Jul 10 2026'
 lang: en
+category: workflow
 ---
 
 "Start a personal blog" sat on my todo list for years. Every attempt died in the same place: picking a framework, choosing a theme, wiring up deployment — the preparation alone would burn through all the enthusiasm. This time I tried something different: pair with an AI, and reserve myself for the decisions.

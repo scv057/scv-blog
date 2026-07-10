@@ -29,3 +29,8 @@ export function localizedPath(lang: Lang, path: string): string {
 	if (lang === defaultLang) return clean === '/' ? '/' : clean;
 	return clean === '/' ? `/${lang}/` : `/${lang}${clean}`;
 }
+
+/** Localized display name for a category slug (falls back to the slug itself). */
+export function categoryLabel(lang: Lang, category: string): string {
+	return (ui[lang] as Record<string, string>)[`cat.${category}`] ?? category;
+}

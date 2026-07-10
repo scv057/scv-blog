@@ -1,6 +1,7 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { CATEGORIES } from './consts';
 
 const blog = defineCollection({
 	// Load Markdown and MDX files in the `src/content/blog/` directory.
@@ -16,6 +17,8 @@ const blog = defineCollection({
 			heroImage: z.optional(image()),
 			// Which language this post is written in
 			lang: z.enum(['en', 'zh']).default('en'),
+			// Editorial section this post belongs to
+			category: z.enum(CATEGORIES).default('essay'),
 		}),
 });
 

@@ -1,0 +1,18 @@
+---
+import Base from '../../../layouts/Base.astro';
+import BlogIndexPage from '../../../components/BlogIndexPage.astro';
+import { CATEGORIES, type Category } from '../../../consts';
+import { ui } from '../../../i18n/ui';
+import { categoryLabel } from '../../../i18n/utils';
+
+export function getStaticPaths() {
+	return CATEGORIES.map((topic) => ({ params: { topic } }));
+}
+
+const topic = Astro.params.topic as Category;
+const label = categoryLabel('zh', topic);
+---
+
+<Base title={`${label} — ${ui.zh['site.title']}`} description={ui.zh['site.description']}>
+	<BlogIndexPage category={topic} />
+</Base>

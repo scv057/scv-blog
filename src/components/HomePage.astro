@@ -1,7 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 import FormattedDate from './FormattedDate.astro';
-import { useTranslations, localizedPath, type Lang } from '../i18n/utils';
+import { useTranslations, localizedPath, categoryLabel, type Lang } from '../i18n/utils';
+import { CATEGORIES } from '../consts';
 
 const lang = (Astro.currentLocale ?? 'en') as Lang;
 const t = useTranslations(lang);
@@ -13,6 +14,12 @@ const [featured, ...rest] = posts;
 const recent = rest.slice(0, 5);
 const year = new Date().getFullYear();
 const postHref = (id: string) => localizedPath(lang, `blog/${id}`);
+
+const topicCounts = CATEGORIES.map((c) => ({
+	slug: c,
+	label: categoryLabel(lang, c),
+	count: posts.filter((p) => p.data.category === c).length,
+}));
 ---
 
 <main class="wrap">
@@ -33,7 +40,9 @@ const postHref = (id: string) => localizedPath(lang, `blog/${id}`);
 				featured && (
 					<section class="lead">
 						<div class="kicker">
-							<span class="mono cat">{t('home.featured')}</span>
+							<span class="mono cat">
+								{t('home.featured')} · {categoryLabel(lang, featured.data.category)}
+							</span>
 						</div>
 						<h2>
 							<a href={postHref(featured.id)}>{featured.data.title}</a>
@@ -63,6 +72,7 @@ const postHref = (id: string) => localizedPath(lang, `blog/${id}`);
 											<FormattedDate date={post.data.pubDate} />
 										</span>
 										<h3>{post.data.title}</h3>
+										<span class="tag">{categoryLabel(lang, post.data.category)}</span>
 										<span class="dek">{post.data.description}</span>
 									</a>
 								</li>
@@ -83,6 +93,19 @@ const postHref = (id: string) => localizedPath(lang, `blog/${id}`);
 					<li><span>02</span> {t('aside.now.2')}</li>
 					<li><span>03</span> {t('aside.now.3')}</li>
 				</ul>
+			</div>
+			<div class="card">
+				<h4>{t('aside.topics')}</h4>
+				<div class="topics">
+					{
+						topicCounts.map(({ slug, label, count }) => (
+							<a href={localizedPath(lang, `topics/${slug}`)}>
+								{label}
+								{count > 0 && <b>{count}</b>}
+							</a>
+						))
+					}
+				</div>
 			</div>
 			<div class="card">
 				<h4>{t('aside.findme')}</h4>

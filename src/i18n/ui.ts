@@ -49,6 +49,14 @@ export const ui = {
 			'Set in a system old-style serif with a monospace for labels. Written by hand, built with Astro, and kept deliberately quiet.',
 		'footer.rss': 'RSS',
 
+		'aside.topics': 'Topics',
+		'topics.eyebrow': 'Topic',
+		'cat.engineering': 'Engineering',
+		'cat.ai': 'AI',
+		'cat.design': 'Design',
+		'cat.workflow': 'Workflow',
+		'cat.essay': 'Essays',
+
 		'a11y.skip': 'Skip to content',
 		'404.eyebrow': 'Error 404',
 		'404.title': 'This page wandered off.',
@@ -93,6 +101,14 @@ export const ui = {
 		'footer.colophon':
 			'西文用系统老式衬线,标签用等宽字体;中文取宋体系。手写代码,用 Astro 构建,刻意保持安静。',
 		'footer.rss': 'RSS',
+
+		'aside.topics': '栏目',
+		'topics.eyebrow': '栏目',
+		'cat.engineering': '工程',
+		'cat.ai': 'AI',
+		'cat.design': '设计',
+		'cat.workflow': '工作流',
+		'cat.essay': '随笔',
 
 		'a11y.skip': '跳到正文',
 		'404.eyebrow': '错误 404',
