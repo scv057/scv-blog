@@ -1,19 +1,47 @@
 ---
-import { SITE_TITLE } from '../consts';
+import { useTranslations, localizedPath, stripLocale, type Lang } from '../i18n/utils';
 import HeaderLink from './HeaderLink.astro';
+
+const lang = (Astro.currentLocale ?? 'en') as Lang;
+const t = useTranslations(lang);
+const rest = stripLocale(Astro.url.pathname);
 ---
 
 <header class="topbar">
 	<div class="container topbar-inner">
-		<a class="brandmark" href="/">
+		<a class="brandmark" href={localizedPath(lang, '')}>
 			<span class="monogram">AX</span>
-			<b>{SITE_TITLE}</b>
+			<b>{t('site.title')}</b>
 		</a>
 		<nav class="links" aria-label="Primary">
-			<HeaderLink href="/">Home</HeaderLink>
-			<HeaderLink href="/blog">Writing</HeaderLink>
-			<HeaderLink href="/about">About</HeaderLink>
-			<button class="toggle" id="theme-toggle" type="button" aria-label="Toggle color theme">Dark</button>
+			<HeaderLink href={localizedPath(lang, '')}>{t('nav.home')}</HeaderLink>
+			<HeaderLink href={localizedPath(lang, 'blog')}>{t('nav.writing')}</HeaderLink>
+			<HeaderLink href={localizedPath(lang, 'about')}>{t('nav.about')}</HeaderLink>
+
+			<span class="lang-switch" aria-label="Language">
+				<a
+					href={localizedPath('en', rest)}
+					data-setlang="en"
+					class:list={['lang-opt', { active: lang === 'en' }]}
+					hreflang="en">EN</a
+				>
+				<span class="lang-sep">/</span>
+				<a
+					href={localizedPath('zh', rest)}
+					data-setlang="zh"
+					class:list={['lang-opt', { active: lang === 'zh' }]}
+					hreflang="zh-CN">中文</a
+				>
+			</span>
+
+			<button
+				class="toggle"
+				id="theme-toggle"
+				type="button"
+				aria-label="Toggle color theme"
+				data-dark={t('theme.dark')}
+				data-light={t('theme.light')}>{t('theme.dark')}</button
+			>
 		</nav>
 	</div>
 </header>
@@ -22,24 +50,35 @@ import HeaderLink from './HeaderLink.astro';
 	(function () {
 		var root = document.documentElement;
 		var btn = document.getElementById('theme-toggle');
-		if (!btn) return;
-		function current() {
-			return (
-				root.getAttribute('data-theme') ||
-				(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-			);
-		}
-		function sync() {
-			btn.textContent = current() === 'dark' ? 'Light' : 'Dark';
-		}
-		btn.addEventListener('click', function () {
-			var next = current() === 'dark' ? 'light' : 'dark';
-			root.setAttribute('data-theme', next);
-			try {
-				localStorage.setItem('theme', next);
-			} catch (e) {}
+		if (btn) {
+			var dark = btn.getAttribute('data-dark') || 'Dark';
+			var light = btn.getAttribute('data-light') || 'Light';
+			var cur = function () {
+				return (
+					root.getAttribute('data-theme') ||
+					(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+				);
+			};
+			var sync = function () {
+				btn.textContent = cur() === 'dark' ? light : dark;
+			};
+			btn.addEventListener('click', function () {
+				var next = cur() === 'dark' ? 'light' : 'dark';
+				root.setAttribute('data-theme', next);
+				try {
+					localStorage.setItem('theme', next);
+				} catch (e) {}
+				sync();
+			});
 			sync();
+		}
+		// Remember an explicit language choice
+		document.querySelectorAll('[data-setlang]').forEach(function (a) {
+			a.addEventListener('click', function () {
+				try {
+					localStorage.setItem('lang', a.getAttribute('data-setlang'));
+				} catch (e) {}
+			});
 		});
-		sync();
 	})();
 </script>

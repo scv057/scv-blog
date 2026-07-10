@@ -1,0 +1,97 @@
+---
+import { getCollection } from 'astro:content';
+import FormattedDate from './FormattedDate.astro';
+import { useTranslations, localizedPath, type Lang } from '../i18n/utils';
+
+const lang = (Astro.currentLocale ?? 'en') as Lang;
+const t = useTranslations(lang);
+
+const posts = (await getCollection('blog', ({ data }) => (data.lang ?? 'en') === lang)).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+const [featured, ...rest] = posts;
+const recent = rest.slice(0, 5);
+const year = new Date().getFullYear();
+const postHref = (id: string) => localizedPath(lang, `blog/${id}`);
+---
+
+<main class="container">
+	<div class="masthead">
+		<div class="eyebrow">
+			<span class="mono">{t('masthead.eyebrow')}</span>
+			<span class="mono">No. 001</span>
+			<span class="mono">{t('masthead.est')} {year}</span>
+		</div>
+		<h1>{t('masthead.title.pre')}<em>{t('masthead.title.em')}</em>{t('masthead.title.post')}</h1>
+		<p class="tagline">{t('site.description')}</p>
+		<hr class="rule-double" />
+	</div>
+
+	<div class="layout">
+		<div>
+			{
+				featured && (
+					<section class="lead">
+						<div class="kicker">
+							<span class="mono cat">{t('home.featured')}</span>
+						</div>
+						<h2>
+							<a href={postHref(featured.id)}>{featured.data.title}</a>
+						</h2>
+						<p class="standfirst">{featured.data.description}</p>
+						<div class="byline">
+							<FormattedDate date={featured.data.pubDate} />
+						</div>
+						<a class="readmore" href={postHref(featured.id)}>
+							{t('home.readmore')}
+						</a>
+					</section>
+				)
+			}
+
+			{
+				recent.length > 0 && (
+					<section class="section-gap">
+						<div class="kicker">
+							<span class="mono">{t('home.recent')}</span>
+						</div>
+						<ul class="index">
+							{recent.map((post) => (
+								<li>
+									<a class="entry" href={postHref(post.id)}>
+										<span class="date">
+											<FormattedDate date={post.data.pubDate} />
+										</span>
+										<h3>{post.data.title}</h3>
+										<span class="dek">{post.data.description}</span>
+									</a>
+								</li>
+							))}
+						</ul>
+					</section>
+				)
+			}
+
+			{!featured && <p class="empty-note">{t('blog.empty')}</p>}
+		</div>
+
+		<aside class="aside">
+			<div class="card">
+				<h4>{t('aside.currently')}</h4>
+				<ul class="now">
+					<li><span>01</span> {t('aside.now.1')}</li>
+					<li><span>02</span> {t('aside.now.2')}</li>
+					<li><span>03</span> {t('aside.now.3')}</li>
+				</ul>
+			</div>
+			<div class="card">
+				<h4>{t('aside.findme')}</h4>
+				<ul class="links-list">
+					<a href="https://github.com/scv057" target="_blank" rel="me noopener">GitHub ↗</a>
+					<a href="mailto:xie5997231@gmail.com">Email ↗</a>
+					<a href="/rss.xml">{t('aside.rss')} ↗</a>
+				</ul>
+			</div>
+		</aside>
+	</div>
+</main>

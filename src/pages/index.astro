@@ -1,104 +1,22 @@
 ---
-import { getCollection } from 'astro:content';
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import FormattedDate from '../components/FormattedDate.astro';
-import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
-
-const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
-const [featured, ...rest] = posts;
-const recent = rest.slice(0, 5);
-const year = new Date().getFullYear();
+import Base from '../layouts/Base.astro';
+import HomePage from '../components/HomePage.astro';
+import { ui } from '../i18n/ui';
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main class="container">
-			<div class="masthead">
-				<div class="eyebrow">
-					<span class="mono">A personal journal</span>
-					<span class="mono">No. 001</span>
-					<span class="mono">Est. {year}</span>
-				</div>
-				<h1>Notes from the <em>build</em> log.</h1>
-				<p class="tagline">{SITE_DESCRIPTION}</p>
-				<hr class="rule-double" />
-			</div>
+<Base title={ui.en['site.title']} description={ui.en['site.description']}>
+	<HomePage />
+</Base>
 
-			<div class="layout">
-				<div>
-					{
-						featured && (
-							<section class="lead">
-								<div class="kicker">
-									<span class="mono cat">Featured</span>
-								</div>
-								<h2>
-									<a href={`/blog/${featured.id}/`}>{featured.data.title}</a>
-								</h2>
-								<p class="standfirst">{featured.data.description}</p>
-								<div class="byline">
-									<FormattedDate date={featured.data.pubDate} />
-								</div>
-								<a class="readmore" href={`/blog/${featured.id}/`}>
-									Continue reading →
-								</a>
-							</section>
-						)
-					}
-
-					{
-						recent.length > 0 && (
-							<section class="section-gap">
-								<div class="kicker">
-									<span class="mono">Recent writing</span>
-								</div>
-								<ul class="index">
-									{recent.map((post) => (
-										<li>
-											<a class="entry" href={`/blog/${post.id}/`}>
-												<span class="date">
-													<FormattedDate date={post.data.pubDate} />
-												</span>
-												<h3>{post.data.title}</h3>
-												<span class="dek">{post.data.description}</span>
-											</a>
-										</li>
-									))}
-								</ul>
-							</section>
-						)
-					}
-				</div>
-
-				<aside class="aside">
-					<div class="card">
-						<h4>Currently</h4>
-						<ul class="now">
-							<li><span>01</span> Building a mahjong strategy engine</li>
-							<li><span>02</span> Reading source, not tutorials</li>
-							<li><span>03</span> Learning to write shorter</li>
-						</ul>
-					</div>
-					<div class="card">
-						<h4>Find me</h4>
-						<ul class="links-list">
-							<a href="https://github.com/scv057" target="_blank" rel="me noopener">GitHub ↗</a>
-							<a href="mailto:xie5997231@gmail.com">Email ↗</a>
-							<a href="/rss.xml">RSS feed ↗</a>
-						</ul>
-					</div>
-				</aside>
-			</div>
-		</main>
-		<Footer />
-	</body>
-</html>
+<script is:inline>
+	// One-time, homepage-only: send visitors to their preferred language.
+	(function () {
+		try {
+			var stored = localStorage.getItem('lang');
+			var lang =
+				stored ||
+				((navigator.language || 'en').toLowerCase().slice(0, 2) === 'zh' ? 'zh' : 'en');
+			if (lang === 'zh') location.replace('/zh/');
+		} catch (e) {}
+	})();
+</script>

@@ -1,0 +1,32 @@
+---
+import AboutHeroImage from '../../assets/blog-placeholder-about.jpg';
+import Layout from '../../layouts/BlogPost.astro';
+---
+
+<Layout
+	title="关于"
+	description="谢杨浩 (Andrew Xie) —— 一名工程师,写软件、系统,以及自己做的那些东西。"
+	pubDate={new Date('July 10 2026')}
+	heroImage={AboutHeroImage}
+>
+	<p>
+		我是谢杨浩(Andrew Xie),一名喜欢把东西造出来、再回头搞清楚它为什么坏掉的工程师。这里是我的一小块角落
+		—— 一个慢节奏、安静的手记,写些比一条推文活得更久的东西。
+	</p>
+
+	<p>
+		我大多写项目里不那么光鲜的中段:那些把"要是能这样就好了"变成"它真的能跑"的小决定。最近这些内容大多和
+		AI、机器学习有关,还有一个麻将手牌识别引擎,以及很多关于如何更快发布、又不把质量搞砸的思考。
+	</p>
+
+	<p>
+		这个站用 <a href="https://astro.build/">Astro</a> 搭建,样式手写,部署在 Vercel 上 ——
+		整套刻意做得无聊又自动,好让我把注意力花在写作上,而不是维护上。
+	</p>
+
+	<p>
+		你可以在 <a href="https://github.com/scv057">GitHub</a> 找到我,或者给我发
+		<a href="mailto:xie5997231@gmail.com">邮件</a>,也可以通过
+		<a href="/rss.xml">RSS</a> 订阅。没有固定更新节奏,也没有噪音 —— 写好了就发。
+	</p>
+</Layout>

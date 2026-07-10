@@ -1,51 +1,9 @@
 ---
-import { getCollection } from 'astro:content';
-import BaseHead from '../../components/BaseHead.astro';
-import Footer from '../../components/Footer.astro';
-import FormattedDate from '../../components/FormattedDate.astro';
-import Header from '../../components/Header.astro';
-import { SITE_TITLE } from '../../consts';
-
-const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+import Base from '../../layouts/Base.astro';
+import BlogIndexPage from '../../components/BlogIndexPage.astro';
+import { ui } from '../../i18n/ui';
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={`Writing — ${SITE_TITLE}`} description="Essays and notes on software, systems, and side projects." />
-	</head>
-	<body>
-		<Header />
-		<main class="container">
-			<div class="masthead">
-				<div class="eyebrow">
-					<span class="mono">The archive</span>
-					<span class="mono">{posts.length} entries</span>
-				</div>
-				<h1>Writing.</h1>
-				<hr class="rule-double" />
-			</div>
-
-			<section style="padding-bottom: clamp(3rem, 6vw, 5rem);">
-				<ul class="index">
-					{
-						posts.map((post) => (
-							<li>
-								<a class="entry" href={`/blog/${post.id}/`}>
-									<span class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</span>
-									<h3>{post.data.title}</h3>
-									<span class="dek">{post.data.description}</span>
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</section>
-		</main>
-		<Footer />
-	</body>
-</html>
+<Base title={`${ui.en['blog.title']} — ${ui.en['site.title']}`} description={ui.en['site.description']}>
+	<BlogIndexPage />
+</Base>

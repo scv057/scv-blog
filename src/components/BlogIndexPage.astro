@@ -1,0 +1,45 @@
+---
+import { getCollection } from 'astro:content';
+import FormattedDate from './FormattedDate.astro';
+import { useTranslations, localizedPath, type Lang } from '../i18n/utils';
+
+const lang = (Astro.currentLocale ?? 'en') as Lang;
+const t = useTranslations(lang);
+
+const posts = (await getCollection('blog', ({ data }) => (data.lang ?? 'en') === lang)).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<main class="container">
+	<div class="masthead">
+		<div class="eyebrow">
+			<span class="mono">{t('blog.archive')}</span>
+			<span class="mono">{posts.length} {t('blog.entries')}</span>
+		</div>
+		<h1>{t('blog.title')}</h1>
+		<hr class="rule-double" />
+	</div>
+
+	<section style="padding-bottom: clamp(3rem, 6vw, 5rem);">
+		{
+			posts.length > 0 ? (
+				<ul class="index">
+					{posts.map((post) => (
+						<li>
+							<a class="entry" href={localizedPath(lang, `blog/${post.id}`)}>
+								<span class="date">
+									<FormattedDate date={post.data.pubDate} />
+								</span>
+								<h3>{post.data.title}</h3>
+								<span class="dek">{post.data.description}</span>
+							</a>
+						</li>
+					))}
+				</ul>
+			) : (
+				<p class="empty-note">{t('blog.empty')}</p>
+			)
+		}
+	</section>
+</main>

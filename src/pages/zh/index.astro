@@ -1,0 +1,9 @@
+---
+import Base from '../../layouts/Base.astro';
+import HomePage from '../../components/HomePage.astro';
+import { ui } from '../../i18n/ui';
+---
+
+<Base title={ui.zh['site.title']} description={ui.zh['site.description']}>
+	<HomePage />
+</Base>

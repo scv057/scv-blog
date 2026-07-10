@@ -1,0 +1,9 @@
+---
+import Base from '../../../layouts/Base.astro';
+import BlogIndexPage from '../../../components/BlogIndexPage.astro';
+import { ui } from '../../../i18n/ui';
+---
+
+<Base title={`${ui.zh['blog.title']} — ${ui.zh['site.title']}`} description={ui.zh['site.description']}>
+	<BlogIndexPage />
+</Base>

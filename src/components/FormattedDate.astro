@@ -4,13 +4,15 @@ interface Props {
 }
 
 const { date } = Astro.props;
+const lang = Astro.currentLocale ?? 'en';
+const locale = lang === 'zh' ? 'zh-CN' : 'en-US';
 ---
 
 <time datetime={date.toISOString()}>
 	{
-		date.toLocaleDateString('en-us', {
+		date.toLocaleDateString(locale, {
 			year: 'numeric',
-			month: 'short',
+			month: lang === 'zh' ? 'long' : 'short',
 			day: 'numeric',
 		})
 	}

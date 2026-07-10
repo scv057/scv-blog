@@ -1,49 +1,48 @@
 ---
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
+import Base from './Base.astro';
 import FormattedDate from '../components/FormattedDate.astro';
-import Header from '../components/Header.astro';
+import { useTranslations, type Lang } from '../i18n/utils';
 
 type Props = CollectionEntry<'blog'>['data'] & { minutes?: number };
 
 const { title, description, pubDate, updatedDate, heroImage, minutes } = Astro.props;
+const lang = (Astro.currentLocale ?? 'en') as Lang;
+const t = useTranslations(lang);
 ---
 
-<html lang="en">
-	<head>
-		<BaseHead title={title} description={description} image={heroImage} />
-	</head>
-	<body>
-		<Header />
-		<main class="container article">
-			<article>
-				<header class="article-head">
-					<p class="eyebrow mono">Journal</p>
-					<h1>{title}</h1>
-					{description && <p class="standfirst">{description}</p>}
-					<div class="byline">
-						<FormattedDate date={pubDate} />
-						{minutes && <><span class="dot"></span><span>{minutes} min read</span></>}
-						{
-							updatedDate && (
-								<>
-									<span class="dot"></span>
-									<span class="updated">Updated <FormattedDate date={updatedDate} /></span>
-								</>
-							)
-						}
-					</div>
-				</header>
-
-				{heroImage && <Image class="hero" width={1200} height={600} src={heroImage} alt="" />}
-
-				<div class="prose">
-					<slot />
+<Base title={title} description={description} image={heroImage}>
+	<main class="container article">
+		<article>
+			<header class="article-head">
+				<p class="eyebrow mono">{t('article.eyebrow')}</p>
+				<h1>{title}</h1>
+				{description && <p class="standfirst">{description}</p>}
+				<div class="byline">
+					<FormattedDate date={pubDate} />
+					{minutes && (
+						<>
+							<span class="dot"></span>
+							<span>{minutes} {t('byline.minRead')}</span>
+						</>
+					)}
+					{
+						updatedDate && (
+							<>
+								<span class="dot"></span>
+								<span class="updated">{t('byline.updated')} <FormattedDate date={updatedDate} /></span>
+							</>
+						)
+					}
 				</div>
-			</article>
-		</main>
-		<Footer />
-	</body>
-</html>
+			</header>
+
+			{heroImage && <Image class="hero" width={1200} height={600} src={heroImage} alt="" />}
+
+			<div class="prose">
+				<slot />
+			</div>
+		</article>
+	</main>
+</Base>

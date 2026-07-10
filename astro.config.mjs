@@ -11,6 +11,14 @@ export default defineConfig({
   site: 'https://scv-blog.vercel.app',
   integrations: [mdx(), sitemap()],
 
+  i18n: {
+    locales: ['en', 'zh'],
+    defaultLocale: 'en',
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
+
   vite: {
     plugins: [tailwindcss()],
   },

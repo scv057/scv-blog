@@ -1,15 +1,16 @@
 ---
+import { useTranslations, type Lang } from '../i18n/utils';
+
+const lang = (Astro.currentLocale ?? 'en') as Lang;
+const t = useTranslations(lang);
 const today = new Date();
 ---
 
 <footer class="site-footer">
 	<div class="container colophon">
-		<p>
-			Set in a system old-style serif with a monospace for labels. Written by hand, built with
-			Astro, and kept deliberately quiet. &copy; {today.getFullYear()} Andrew Xie (谢杨浩)
-		</p>
+		<p>{t('footer.colophon')} &copy; {today.getFullYear()} Andrew Xie (谢杨浩)</p>
 		<nav class="foot-links" aria-label="Elsewhere">
-			<a href="/rss.xml">RSS</a>
+			<a href="/rss.xml">{t('footer.rss')}</a>
 			<a href="https://github.com/scv057" target="_blank" rel="me noopener">GitHub</a>
 			<a href="mailto:xie5997231@gmail.com">Email</a>
 		</nav>
