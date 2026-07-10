@@ -1,0 +1,98 @@
+/*
+  Base styles migrated to Tailwind. Design tokens live in @theme (so they
+  generate utilities like text-accent / bg-line), and element defaults that
+  style Markdown content live in @layer base.
+  Original palette based on Bear Blog's default CSS (MIT).
+ */
+
+@import 'tailwindcss';
+
+@theme {
+	--color-accent: #2337ff;
+	--color-accent-dark: #000d8a;
+	--color-ink: #0f1219; /* headings / "black" */
+	--color-body: #222939; /* body text / "gray-dark" */
+	--color-muted: #6073a3; /* "gray" */
+	--color-line: #e5e9f0; /* borders / "gray-light" */
+}
+
+:root {
+	/* Referenced via shadow-[var(--box-shadow)] utilities */
+	--box-shadow:
+		0 2px 6px rgb(96 115 159 / 0.25), 0 8px 24px rgb(96 115 159 / 0.33),
+		0 16px 32px rgb(96 115 159 / 0.33);
+}
+
+@layer base {
+	body {
+		font-family: var(--font-atkinson), sans-serif;
+		@apply text-[20px] leading-[1.7] text-body max-[720px]:text-[18px];
+		background: linear-gradient(rgb(229 233 240 / 0.5), #fff) no-repeat;
+		background-size: 100% 600px;
+		word-wrap: break-word;
+		overflow-wrap: break-word;
+	}
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		@apply mb-2 leading-[1.2] text-ink;
+	}
+	h1 {
+		@apply text-[3.052em];
+	}
+	h2 {
+		@apply text-[2.441em];
+	}
+	h3 {
+		@apply text-[1.953em];
+	}
+	h4 {
+		@apply text-[1.563em];
+	}
+	h5 {
+		@apply text-[1.25em];
+	}
+	strong,
+	b {
+		@apply font-bold;
+	}
+	a {
+		@apply text-accent;
+	}
+	p {
+		@apply mb-4;
+	}
+	.prose p {
+		@apply mb-8;
+	}
+	table {
+		@apply w-full;
+	}
+	img {
+		@apply h-auto max-w-full rounded-lg;
+	}
+	code {
+		@apply rounded-xs bg-line px-[5px] py-0.5;
+	}
+	pre {
+		@apply rounded-lg p-6;
+	}
+	pre > code {
+		all: unset;
+	}
+	blockquote {
+		@apply m-0 border-l-4 border-accent pl-5 text-[1.333em];
+	}
+	hr {
+		@apply border-0 border-t border-line;
+	}
+	textarea {
+		@apply w-full text-base;
+	}
+	input {
+		@apply text-base;
+	}
+}
