@@ -1,11 +1,10 @@
 ---
-import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import { SITE_TITLE } from '../../consts';
 
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
@@ -15,34 +14,31 @@ const posts = (await getCollection('blog')).sort(
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<BaseHead title={`Writing — ${SITE_TITLE}`} description="Essays and notes on software, systems, and side projects." />
 	</head>
 	<body>
 		<Header />
-		<main class="mx-auto w-[960px] max-w-[calc(100%-2em)] px-4 py-12 max-[720px]:p-4">
-			<section>
-				<ul
-					class="m-0 flex list-none flex-wrap gap-8 p-0 max-[720px]:gap-2 [&>li:first-child>a>img]:w-full [&>li:first-child_.title]:text-[2.369rem] max-[720px]:[&>li:first-child_.title]:text-[1.563em]"
-				>
+		<main class="container">
+			<div class="masthead">
+				<div class="eyebrow">
+					<span class="mono">The archive</span>
+					<span class="mono">{posts.length} entries</span>
+				</div>
+				<h1>Writing.</h1>
+				<hr class="rule-double" />
+			</div>
+
+			<section style="padding-bottom: clamp(3rem, 6vw, 5rem);">
+				<ul class="index">
 					{
 						posts.map((post) => (
-							<li class="w-[calc(50%-1rem)] first:mb-4 first:w-full first:text-center max-[720px]:w-full max-[720px]:text-center max-[720px]:first:mb-0">
-								<a href={`/blog/${post.id}/`} class="group block no-underline">
-									{post.data.heroImage && (
-										<Image
-											class="mb-2 rounded-xl transition-shadow duration-200 ease-in-out group-hover:shadow-[var(--box-shadow)]"
-											width={720}
-											height={360}
-											src={post.data.heroImage}
-											alt=""
-										/>
-									)}
-									<h4 class="title m-0 leading-none text-ink transition-colors duration-200 ease-in-out group-hover:text-accent">
-										{post.data.title}
-									</h4>
-									<p class="date m-0 text-muted transition-colors duration-200 ease-in-out group-hover:text-accent">
+							<li>
+								<a class="entry" href={`/blog/${post.id}/`}>
+									<span class="date">
 										<FormattedDate date={post.data.pubDate} />
-									</p>
+									</span>
+									<h3>{post.data.title}</h3>
+									<span class="dek">{post.data.description}</span>
 								</a>
 							</li>
 						))
