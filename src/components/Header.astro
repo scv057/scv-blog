@@ -5,6 +5,9 @@ import HeaderLink from './HeaderLink.astro';
 const lang = (Astro.currentLocale ?? 'en') as Lang;
 const t = useTranslations(lang);
 const rest = stripLocale(Astro.url.pathname);
+// A post has no guaranteed translation, so switch language to the blog index instead of a dead URL
+const isPost = /^\/blog\/.+/.test(rest);
+const switchPath = isPost ? '/blog' : rest;
 ---
 
 <header class="topbar">
@@ -20,14 +23,14 @@ const rest = stripLocale(Astro.url.pathname);
 
 			<span class="lang-switch" aria-label="Language">
 				<a
-					href={localizedPath('en', rest)}
+					href={localizedPath('en', switchPath)}
 					data-setlang="en"
 					class:list={['lang-opt', { active: lang === 'en' }]}
 					hreflang="en">EN</a
 				>
 				<span class="lang-sep">/</span>
 				<a
-					href={localizedPath('zh', rest)}
+					href={localizedPath('zh', switchPath)}
 					data-setlang="zh"
 					class:list={['lang-opt', { active: lang === 'zh' }]}
 					hreflang="zh-CN">中文</a

@@ -48,6 +48,12 @@ export const ui = {
 		'footer.colophon':
 			'Set in a system old-style serif with a monospace for labels. Written by hand, built with Astro, and kept deliberately quiet.',
 		'footer.rss': 'RSS',
+
+		'a11y.skip': 'Skip to content',
+		'404.eyebrow': 'Error 404',
+		'404.title': 'This page wandered off.',
+		'404.body': "The link is broken or the page has moved. Let's get you back on the path.",
+		'404.home': 'Back to home →',
 	},
 	zh: {
 		'site.title': 'Andrew Xie',
@@ -87,5 +93,11 @@ export const ui = {
 		'footer.colophon':
 			'西文用系统老式衬线,标签用等宽字体;中文取宋体系。手写代码,用 Astro 构建,刻意保持安静。',
 		'footer.rss': 'RSS',
+
+		'a11y.skip': '跳到正文',
+		'404.eyebrow': '错误 404',
+		'404.title': '这个页面走丢了。',
+		'404.body': '链接失效了,或者页面已经搬走。回到主路上吧。',
+		'404.home': '返回首页 →',
 	},
 } as const;

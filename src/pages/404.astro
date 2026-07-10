@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import { useTranslations, localizedPath, type Lang } from '../i18n/utils';
+import { ui } from '../i18n/ui';
+
+const lang = (Astro.currentLocale ?? 'en') as Lang;
+const t = useTranslations(lang);
+---
+
+<Base title={`404 — ${ui.en['site.title']}`} description={ui.en['404.title']}>
+	<main class="wrap">
+		<div class="notfound">
+			<p class="eyebrow mono">{t('404.eyebrow')}</p>
+			<h1>{t('404.title')}</h1>
+			<p>{t('404.body')}</p>
+			<a class="home" href={localizedPath(lang, '')}>{t('404.home')}</a>
+		</div>
+	</main>
+</Base>
