@@ -1,23 +1,34 @@
 ---
 import { type CollectionEntry, getCollection, render } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
+import type { PostRef } from '../../components/PostNav.astro';
 
 export async function getStaticPaths() {
-	const posts = await getCollection('blog', ({ data }) => (data.lang ?? 'en') === 'en');
-	return posts.map((post) => ({
+	const posts = (await getCollection('blog', ({ data }) => (data.lang ?? 'en') === 'en')).sort(
+		(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+	);
+	return posts.map((post, i) => ({
 		params: { slug: post.id },
-		props: post,
+		props: {
+			post,
+			newer: i > 0 ? { id: posts[i - 1].id, title: posts[i - 1].data.title } : null,
+			older: i < posts.length - 1 ? { id: posts[i + 1].id, title: posts[i + 1].data.title } : null,
+		},
 	}));
 }
-type Props = CollectionEntry<'blog'>;
+type Props = {
+	post: CollectionEntry<'blog'>;
+	newer: PostRef | null;
+	older: PostRef | null;
+};
 
-const post = Astro.props;
+const { post, newer, older } = Astro.props;
 const { Content } = await render(post);
 
 const words = (post.body ?? '').trim().split(/\s+/).filter(Boolean).length;
 const minutes = Math.max(1, Math.round(words / 200));
 ---
 
-<BlogPost {...post.data} minutes={minutes}>
+<BlogPost {...post.data} minutes={minutes} older={older} newer={newer}>
 	<Content />
 </BlogPost>

@@ -1,0 +1,38 @@
+---
+import { useTranslations, localizedPath, type Lang } from '../i18n/utils';
+
+export interface PostRef {
+	id: string;
+	title: string;
+}
+
+interface Props {
+	older?: PostRef | null;
+	newer?: PostRef | null;
+}
+
+const { older, newer } = Astro.props;
+const lang = (Astro.currentLocale ?? 'en') as Lang;
+const t = useTranslations(lang);
+---
+
+{
+	(older || newer) && (
+		<nav class="postnav" aria-label="Adjacent posts">
+			{older ? (
+				<a class="postnav-item" href={localizedPath(lang, `blog/${older.id}`)} rel="prev">
+					<span class="mono">{t('postnav.older')}</span>
+					<b>{older.title}</b>
+				</a>
+			) : (
+				<span />
+			)}
+			{newer && (
+				<a class="postnav-item postnav-next" href={localizedPath(lang, `blog/${newer.id}`)} rel="next">
+					<span class="mono">{t('postnav.newer')}</span>
+					<b>{newer.title}</b>
+				</a>
+			)}
+		</nav>
+	)
+}

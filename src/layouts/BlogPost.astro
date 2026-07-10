@@ -5,11 +5,17 @@ import Base from './Base.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import ShareLinks from '../components/ShareLinks.astro';
 import Comments from '../components/Comments.astro';
+import PostNav, { type PostRef } from '../components/PostNav.astro';
 import { useTranslations, localizedPath, categoryLabel, type Lang } from '../i18n/utils';
 
-type Props = CollectionEntry<'blog'>['data'] & { minutes?: number };
+type Props = CollectionEntry<'blog'>['data'] & {
+	minutes?: number;
+	older?: PostRef | null;
+	newer?: PostRef | null;
+};
 
-const { title, description, pubDate, updatedDate, heroImage, minutes, category } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, minutes, category, older, newer } =
+	Astro.props;
 const lang = (Astro.currentLocale ?? 'en') as Lang;
 const t = useTranslations(lang);
 ---
@@ -60,6 +66,7 @@ const t = useTranslations(lang);
 
 			<div class="prose">
 				<ShareLinks title={title} />
+				<PostNav older={older} newer={newer} />
 				<Comments />
 			</div>
 		</article>
