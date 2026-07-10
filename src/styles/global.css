@@ -105,6 +105,26 @@
     border-radius: 6px; padding: 1.1rem 1.2rem; overflow-x: auto;
   }
   pre code { background: none; padding: 0; font-size: inherit; }
+  /* Shiki dual themes (defaultColor:false emits --shiki-light/--shiki-dark vars) */
+  .astro-code, .astro-code span {
+    color: var(--shiki-light);
+    font-style: var(--shiki-light-font-style);
+    font-weight: var(--shiki-light-font-weight);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .astro-code,
+    :root:not([data-theme='light']) .astro-code span {
+      color: var(--shiki-dark);
+      font-style: var(--shiki-dark-font-style);
+      font-weight: var(--shiki-dark-font-weight);
+    }
+  }
+  :root[data-theme='dark'] .astro-code,
+  :root[data-theme='dark'] .astro-code span {
+    color: var(--shiki-dark);
+    font-style: var(--shiki-dark-font-style);
+    font-weight: var(--shiki-dark-font-weight);
+  }
   blockquote {
     border-left: 3px solid var(--color-accent); margin: 1.5rem 0;
     padding: 0.2rem 0 0.2rem 1.2rem; font-style: italic;
@@ -329,6 +349,24 @@ img.hero {
 }
 .share-qr svg { display: block; margin: 0 auto 0.6rem; background: #fff; padding: 0.4rem; }
 .share-qr p { margin: 0; font-size: 0.82rem; color: var(--color-muted); line-height: 1.5; }
+
+/* ---------------------------------------------------------- comments */
+.comments { margin-top: clamp(2.4rem, 5vw, 3.5rem); }
+.comments .giscus { margin-top: 0.5rem; }
+
+/* ---------------------------------------------------------- search */
+.search-box { max-width: var(--measure); margin-inline: auto; padding-bottom: clamp(3rem, 6vw, 5rem); }
+.search-box .pagefind-ui { --pagefind-ui-scale: 0.9; }
+.search-box {
+  --pagefind-ui-primary: var(--color-accent);
+  --pagefind-ui-text: var(--color-ink);
+  --pagefind-ui-background: var(--color-paper-2);
+  --pagefind-ui-border: var(--color-rule-strong);
+  --pagefind-ui-tag: var(--color-paper-2);
+  --pagefind-ui-border-width: 1px;
+  --pagefind-ui-border-radius: 4px;
+  --pagefind-ui-font: var(--font-serif);
+}
 
 /* ---------------------------------------------------------- footer */
 .site-footer { margin-top: auto; }

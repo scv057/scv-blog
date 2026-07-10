@@ -1,0 +1,9 @@
+---
+import Base from '../../layouts/Base.astro';
+import SearchPage from '../../components/SearchPage.astro';
+import { ui } from '../../i18n/ui';
+---
+
+<Base title={`搜索 — ${ui.zh['site.title']}`} description={ui.zh['site.description']}>
+	<SearchPage />
+</Base>

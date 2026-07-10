@@ -1,0 +1,44 @@
+---
+import { useTranslations, type Lang } from '../i18n/utils';
+
+const lang = (Astro.currentLocale ?? 'en') as Lang;
+const t = useTranslations(lang);
+---
+
+<main class="wrap">
+	<div class="masthead">
+		<div class="eyebrow">
+			<span class="mono">{t('search.eyebrow')}</span>
+		</div>
+		<h1>{t('search.title')}</h1>
+		<hr class="rule-double" />
+	</div>
+
+	<div class="search-box">
+		<link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
+		<div id="search"></div>
+	</div>
+</main>
+
+<script is:inline>
+	(function () {
+		var s = document.createElement('script');
+		s.src = '/pagefind/pagefind-ui.js';
+		s.onload = function () {
+			// eslint-disable-next-line no-undef
+			new PagefindUI({
+				element: '#search',
+				showSubResults: true,
+				showImages: false,
+				autofocus: true,
+			});
+		};
+		s.onerror = function () {
+			var el = document.getElementById('search');
+			if (el)
+				el.innerHTML =
+					'<p class="empty-note">Search index is built at deploy time — run a production build to try it locally.</p>';
+		};
+		document.head.appendChild(s);
+	})();
+</script>

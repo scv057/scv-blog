@@ -4,6 +4,7 @@ import type { CollectionEntry } from 'astro:content';
 import Base from './Base.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import ShareLinks from '../components/ShareLinks.astro';
+import Comments from '../components/Comments.astro';
 import { useTranslations, localizedPath, categoryLabel, type Lang } from '../i18n/utils';
 
 type Props = CollectionEntry<'blog'>['data'] & { minutes?: number };
@@ -15,7 +16,7 @@ const t = useTranslations(lang);
 
 <Base title={title} description={description} image={heroImage}>
 	<main class="wrap article">
-		<article>
+		<article data-pagefind-body>
 			<header class="article-head">
 				<p class="eyebrow mono">
 					{t('article.eyebrow')}
@@ -59,6 +60,7 @@ const t = useTranslations(lang);
 
 			<div class="prose">
 				<ShareLinks title={title} />
+				<Comments />
 			</div>
 		</article>
 	</main>

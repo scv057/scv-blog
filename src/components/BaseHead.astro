@@ -69,3 +69,6 @@ const ogImage = new URL(image?.src ?? '/og-default.png', Astro.url);
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
+
+<!-- Vercel Web Analytics (needs Analytics enabled once in the Vercel dashboard) -->
+{import.meta.env.PROD && <script defer src="/_vercel/insights/script.js" is:inline />}

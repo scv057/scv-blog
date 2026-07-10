@@ -63,6 +63,10 @@ export const ui = {
 		'share.native': 'Share…',
 		'share.wechat': 'WeChat',
 		'share.wechatHint': 'Scan in WeChat, then forward or post to Moments.',
+		'comments.label': 'Comments',
+		'search.title': 'Search.',
+		'search.eyebrow': 'Find anything',
+		'nav.search': 'Search',
 
 		'a11y.skip': 'Skip to content',
 		'404.eyebrow': 'Error 404',
@@ -123,6 +127,10 @@ export const ui = {
 		'share.native': '系统分享…',
 		'share.wechat': '微信',
 		'share.wechatHint': '用微信扫码打开,然后转发或分享到朋友圈。',
+		'comments.label': '评论',
+		'search.title': '搜索。',
+		'search.eyebrow': '查找内容',
+		'nav.search': '搜索',
 
 		'a11y.skip': '跳到正文',
 		'404.eyebrow': '错误 404',

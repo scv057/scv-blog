@@ -1,0 +1,58 @@
+---
+import { useTranslations, type Lang } from '../i18n/utils';
+
+const lang = (Astro.currentLocale ?? 'en') as Lang;
+const t = useTranslations(lang);
+const giscusLang = lang === 'zh' ? 'zh-CN' : 'en';
+---
+
+<section class="comments">
+	<div class="share-kicker"><span class="mono">{t('comments.label')}</span></div>
+	<div class="giscus" data-giscus-lang={giscusLang}></div>
+</section>
+
+<script is:inline>
+	(function () {
+		var mount = document.querySelector('.giscus');
+		if (!mount || mount.dataset.loaded) return;
+		mount.dataset.loaded = '1';
+
+		function currentTheme() {
+			return (
+				document.documentElement.getAttribute('data-theme') ||
+				(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+			);
+		}
+
+		var s = document.createElement('script');
+		s.src = 'https://giscus.app/client.js';
+		s.async = true;
+		s.crossOrigin = 'anonymous';
+		var attrs = {
+			'data-repo': 'scv057/scv-blog',
+			'data-repo-id': 'R_kgDOTUDJHA',
+			'data-category': 'Announcements',
+			'data-category-id': 'DIC_kwDOTUDJHM4DA5s4',
+			'data-mapping': 'pathname',
+			'data-strict': '0',
+			'data-reactions-enabled': '1',
+			'data-emit-metadata': '0',
+			'data-input-position': 'bottom',
+			'data-theme': currentTheme(),
+			'data-lang': mount.dataset.giscusLang || 'en',
+		};
+		for (var k in attrs) s.setAttribute(k, attrs[k]);
+		mount.appendChild(s);
+
+		// Keep giscus in sync with the site theme toggle
+		new MutationObserver(function () {
+			var frame = document.querySelector('iframe.giscus-frame');
+			if (frame && frame.contentWindow) {
+				frame.contentWindow.postMessage(
+					{ giscus: { setConfig: { theme: currentTheme() } } },
+					'https://giscus.app',
+				);
+			}
+		}).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+	})();
+</script>

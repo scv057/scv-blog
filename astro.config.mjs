@@ -19,6 +19,13 @@ export default defineConfig({
     }),
   ],
 
+  markdown: {
+    shikiConfig: {
+      themes: { light: 'vitesse-light', dark: 'vitesse-dark' },
+      defaultColor: false,
+    },
+  },
+
   i18n: {
     locales: ['en', 'zh'],
     defaultLocale: 'en',
