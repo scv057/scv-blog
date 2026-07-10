@@ -7,16 +7,3 @@ import { ui } from '../i18n/ui';
 <Base title={ui.en['site.title']} description={ui.en['site.description']}>
 	<HomePage />
 </Base>
-
-<script is:inline>
-	// One-time, homepage-only: send visitors to their preferred language.
-	(function () {
-		try {
-			var stored = localStorage.getItem('lang');
-			var lang =
-				stored ||
-				((navigator.language || 'en').toLowerCase().slice(0, 2) === 'zh' ? 'zh' : 'en');
-			if (lang === 'zh') location.replace('/zh/');
-		} catch (e) {}
-	})();
-</script>

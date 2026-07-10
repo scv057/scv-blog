@@ -17,12 +17,21 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const { title, description, image = FallbackImage } = Astro.props;
 ---
 
-<!-- Apply saved theme before paint to avoid a flash -->
+<!-- Before paint: apply saved theme, and send homepage visitors to their language -->
 <script is:inline>
 	(function () {
 		try {
 			var t = localStorage.getItem('theme');
 			if (t) document.documentElement.setAttribute('data-theme', t);
+		} catch (e) {}
+		try {
+			if (location.pathname === '/') {
+				var stored = localStorage.getItem('lang');
+				var lang =
+					stored ||
+					((navigator.language || 'en').toLowerCase().slice(0, 2) === 'zh' ? 'zh' : 'en');
+				if (lang === 'zh') location.replace('/zh/');
+			}
 		} catch (e) {}
 	})();
 </script>
