@@ -14,18 +14,31 @@ const url = new URL(Astro.url.pathname, Astro.site).href;
 const eTitle = encodeURIComponent(title);
 const eUrl = encodeURIComponent(url);
 
+// Icon paths: simple-icons (brands) + Material (actions), all 24x24 fills
+const icons: Record<string, string> = {
+	copy: 'M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z',
+	check: 'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z',
+	native: 'M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z',
+	x: 'M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z',
+	hn: 'M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z',
+	linkedin: 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z',
+	telegram: 'M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z',
+	weibo: 'M10.098 20.323c-3.977.391-7.414-1.406-7.672-4.02-.259-2.609 2.759-5.047 6.74-5.441 3.979-.394 7.413 1.404 7.671 4.018.259 2.6-2.759 5.049-6.737 5.439l-.002.004zM9.05 17.219c-.384.616-1.208.884-1.829.602-.612-.279-.793-.991-.406-1.593.379-.595 1.176-.861 1.793-.601.622.263.82.972.442 1.592zm1.27-1.627c-.141.237-.449.353-.689.253-.236-.09-.313-.361-.177-.586.138-.227.436-.346.672-.24.239.09.315.36.18.601l.014-.028zm.176-2.719c-1.893-.493-4.033.45-4.857 2.118-.836 1.704-.026 3.591 1.886 4.21 1.983.64 4.318-.341 5.132-2.179.8-1.793-.201-3.642-2.161-4.149zm7.563-1.224c-.346-.105-.57-.18-.405-.615.375-.977.42-1.804 0-2.404-.781-1.112-2.915-1.053-5.364-.03 0 0-.766.331-.571-.271.376-1.217.32-2.23-.27-2.809-1.338-1.336-4.869.045-7.888 3.08C1.309 10.87 0 13.273 0 15.348c0 3.981 5.099 6.395 10.086 6.395 6.536 0 10.888-3.801 10.888-6.82 0-1.822-1.547-2.854-2.915-3.284v.01zm1.908-5.092c-.766-.856-1.908-1.187-2.96-.962-.436.09-.706.511-.616.945.09.436.511.706.945.616.511-.105 1.067.044 1.442.465.376.421.466.976.3 1.457-.15.421.075.902.496 1.052.421.15.9-.075 1.052-.496.33-.976.15-2.114-.616-2.985l-.043-.092zm2.418-2.148c-1.576-1.757-3.905-2.419-6.054-1.968-.496.104-.812.586-.706 1.081.104.496.586.813 1.081.707 1.532-.331 3.185.15 4.296 1.396 1.111 1.246 1.412 2.944.917 4.416-.165.48.105.99.586 1.156.479.165.99-.105 1.155-.585.691-2.073.271-4.446-1.305-6.203h.03z',
+	wechat: 'M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178A1.17 1.17 0 0 1 4.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178A1.17 1.17 0 0 1 10.436 7.17c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826 0 1.622-.12 2.361-.336a.722.722 0 0 1 .598.082l1.584.926a.272.272 0 0 0 .14.047c.134 0 .24-.111.24-.247 0-.06-.023-.12-.038-.177l-.327-1.233a.582.582 0 0 1-.023-.156.49.49 0 0 1 .201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-6.656-6.088V8.89c-.135-.01-.27-.027-.406-.03zm-2.53 3.274c.535 0 .969.44.969.982a.976.976 0 0 1-.969.983.976.976 0 0 1-.969-.983c0-.542.434-.982.97-.982zm4.844 0c.535 0 .969.44.969.982a.976.976 0 0 1-.969.983.976.976 0 0 1-.968-.983c0-.542.433-.982.968-.982z',
+};
+
 const platforms =
 	lang === 'zh'
 		? [
-				{ name: '微博', href: `https://service.weibo.com/share/share.php?url=${eUrl}&title=${eTitle}` },
-				{ name: 'X', href: `https://twitter.com/intent/tweet?text=${eTitle}&url=${eUrl}` },
-				{ name: 'Telegram', href: `https://t.me/share/url?url=${eUrl}&text=${eTitle}` },
+				{ name: '微博', icon: 'weibo', href: `https://service.weibo.com/share/share.php?url=${eUrl}&title=${eTitle}` },
+				{ name: 'X', icon: 'x', href: `https://twitter.com/intent/tweet?text=${eTitle}&url=${eUrl}` },
+				{ name: 'Telegram', icon: 'telegram', href: `https://t.me/share/url?url=${eUrl}&text=${eTitle}` },
 			]
 		: [
-				{ name: 'X', href: `https://twitter.com/intent/tweet?text=${eTitle}&url=${eUrl}` },
-				{ name: 'Hacker News', href: `https://news.ycombinator.com/submitlink?u=${eUrl}&t=${eTitle}` },
-				{ name: 'LinkedIn', href: `https://www.linkedin.com/sharing/share-offsite/?url=${eUrl}` },
-				{ name: 'Telegram', href: `https://t.me/share/url?url=${eUrl}&text=${eTitle}` },
+				{ name: 'X', icon: 'x', href: `https://twitter.com/intent/tweet?text=${eTitle}&url=${eUrl}` },
+				{ name: 'Hacker News', icon: 'hn', href: `https://news.ycombinator.com/submitlink?u=${eUrl}&t=${eTitle}` },
+				{ name: 'LinkedIn', icon: 'linkedin', href: `https://www.linkedin.com/sharing/share-offsite/?url=${eUrl}` },
+				{ name: 'Telegram', icon: 'telegram', href: `https://t.me/share/url?url=${eUrl}&text=${eTitle}` },
 			];
 
 // Build-time QR for WeChat (Chinese posts only): scan inside WeChat, then forward
@@ -36,24 +49,53 @@ const wechatQr =
 ---
 
 <div class="share" data-url={url} data-title={title}>
-	<div class="kicker"><span class="mono">{t('share.label')}</span></div>
+	<div class="share-kicker"><span class="mono">{t('share.label')}</span></div>
 	<div class="share-row">
-		<button type="button" class="share-chip" data-share-copy data-copied={t('share.copied')}
-			>{t('share.copy')}</button
+		<button
+			type="button"
+			class="share-chip"
+			data-share-copy
+			aria-label={t('share.copy')}
+			title={t('share.copy')}
+			data-copied-label={t('share.copied')}
 		>
-		<button type="button" class="share-chip" data-share-native hidden>{t('share.native')}</button>
-		{platforms.map((p) => (
-			<a class="share-chip" href={p.href} target="_blank" rel="noopener">{p.name}</a>
-		))}
+			<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d={icons.copy} /></svg>
+			<svg viewBox="0 0 24 24" aria-hidden="true" data-check hidden
+				><path fill="currentColor" d={icons.check} /></svg
+			>
+		</button>
+		<button
+			type="button"
+			class="share-chip"
+			data-share-native
+			aria-label={t('share.native')}
+			title={t('share.native')}
+			hidden
+		>
+			<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d={icons.native} /></svg>
+		</button>
+		{
+			platforms.map((p) => (
+				<a class="share-chip" href={p.href} target="_blank" rel="noopener" aria-label={p.name} title={p.name}>
+					<svg viewBox="0 0 24 24" aria-hidden="true">
+						<path fill="currentColor" d={icons[p.icon]} />
+					</svg>
+				</a>
+			))
+		}
 		{
 			wechatQr && (
-				<details class="share-wechat">
-					<summary class="share-chip">{t('share.wechat')}</summary>
-					<div class="share-qr">
+				<span class="share-wechat">
+					<button type="button" class="share-chip" aria-label={t('share.wechat')} title={t('share.wechat')} aria-describedby="wechat-qr">
+						<svg viewBox="0 0 24 24" aria-hidden="true">
+							<path fill="currentColor" d={icons.wechat} />
+						</svg>
+					</button>
+					<div class="share-qr" id="wechat-qr" role="tooltip">
 						<Fragment set:html={wechatQr} />
 						<p>{t('share.wechatHint')}</p>
 					</div>
-				</details>
+				</span>
 			)
 		}
 	</div>
@@ -68,12 +110,21 @@ const wechatQr =
 			const copyBtn = root.querySelector<HTMLButtonElement>('[data-share-copy]');
 			if (copyBtn && !copyBtn.dataset.bound) {
 				copyBtn.dataset.bound = '1';
-				const original = copyBtn.textContent;
+				const [linkIcon, checkIcon] = copyBtn.querySelectorAll('svg');
+				const label = copyBtn.getAttribute('aria-label') ?? '';
 				copyBtn.addEventListener('click', async () => {
 					try {
 						await navigator.clipboard.writeText(url);
-						copyBtn.textContent = copyBtn.dataset.copied ?? 'Copied ✓';
-						setTimeout(() => (copyBtn.textContent = original), 1800);
+						linkIcon.setAttribute('hidden', '');
+						checkIcon.removeAttribute('hidden');
+						copyBtn.classList.add('copied');
+						copyBtn.title = copyBtn.dataset.copiedLabel ?? '';
+						setTimeout(() => {
+							checkIcon.setAttribute('hidden', '');
+							linkIcon.removeAttribute('hidden');
+							copyBtn.classList.remove('copied');
+							copyBtn.title = label;
+						}, 1800);
 					} catch {}
 				});
 			}
