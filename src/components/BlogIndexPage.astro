@@ -11,7 +11,7 @@ const posts = (await getCollection('blog', ({ data }) => (data.lang ?? 'en') ===
 );
 ---
 
-<main class="container">
+<main class="wrap">
 	<div class="masthead">
 		<div class="eyebrow">
 			<span class="mono">{t('blog.archive')}</span>
