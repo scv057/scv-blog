@@ -57,6 +57,13 @@ export const ui = {
 		'cat.workflow': 'Workflow',
 		'cat.essay': 'Essays',
 
+		'share.label': 'Share this post',
+		'share.copy': 'Copy link',
+		'share.copied': 'Copied ✓',
+		'share.native': 'Share…',
+		'share.wechat': 'WeChat',
+		'share.wechatHint': 'Scan in WeChat, then forward or post to Moments.',
+
 		'a11y.skip': 'Skip to content',
 		'404.eyebrow': 'Error 404',
 		'404.title': 'This page wandered off.',
@@ -109,6 +116,13 @@ export const ui = {
 		'cat.design': '设计',
 		'cat.workflow': '工作流',
 		'cat.essay': '随笔',
+
+		'share.label': '分享这篇文章',
+		'share.copy': '复制链接',
+		'share.copied': '已复制 ✓',
+		'share.native': '系统分享…',
+		'share.wechat': '微信',
+		'share.wechatHint': '用微信扫码打开,然后转发或分享到朋友圈。',
 
 		'a11y.skip': '跳到正文',
 		'404.eyebrow': '错误 404',

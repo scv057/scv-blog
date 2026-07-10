@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import Base from './Base.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import ShareLinks from '../components/ShareLinks.astro';
 import { useTranslations, localizedPath, categoryLabel, type Lang } from '../i18n/utils';
 
 type Props = CollectionEntry<'blog'>['data'] & { minutes?: number };
@@ -54,6 +55,10 @@ const t = useTranslations(lang);
 
 			<div class="prose">
 				<slot />
+			</div>
+
+			<div class="prose">
+				<ShareLinks title={title} />
 			</div>
 		</article>
 	</main>

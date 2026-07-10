@@ -1,0 +1,92 @@
+---
+import QRCode from 'qrcode';
+import { useTranslations, type Lang } from '../i18n/utils';
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+const lang = (Astro.currentLocale ?? 'en') as Lang;
+const t = useTranslations(lang);
+
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const eTitle = encodeURIComponent(title);
+const eUrl = encodeURIComponent(url);
+
+const platforms =
+	lang === 'zh'
+		? [
+				{ name: '微博', href: `https://service.weibo.com/share/share.php?url=${eUrl}&title=${eTitle}` },
+				{ name: 'X', href: `https://twitter.com/intent/tweet?text=${eTitle}&url=${eUrl}` },
+				{ name: 'Telegram', href: `https://t.me/share/url?url=${eUrl}&text=${eTitle}` },
+			]
+		: [
+				{ name: 'X', href: `https://twitter.com/intent/tweet?text=${eTitle}&url=${eUrl}` },
+				{ name: 'Hacker News', href: `https://news.ycombinator.com/submitlink?u=${eUrl}&t=${eTitle}` },
+				{ name: 'LinkedIn', href: `https://www.linkedin.com/sharing/share-offsite/?url=${eUrl}` },
+				{ name: 'Telegram', href: `https://t.me/share/url?url=${eUrl}&text=${eTitle}` },
+			];
+
+// Build-time QR for WeChat (Chinese posts only): scan inside WeChat, then forward
+const wechatQr =
+	lang === 'zh'
+		? await QRCode.toString(url, { type: 'svg', margin: 1, width: 148, color: { dark: '#1b1917', light: '#0000' } })
+		: null;
+---
+
+<div class="share" data-url={url} data-title={title}>
+	<div class="kicker"><span class="mono">{t('share.label')}</span></div>
+	<div class="share-row">
+		<button type="button" class="share-chip" data-share-copy data-copied={t('share.copied')}
+			>{t('share.copy')}</button
+		>
+		<button type="button" class="share-chip" data-share-native hidden>{t('share.native')}</button>
+		{platforms.map((p) => (
+			<a class="share-chip" href={p.href} target="_blank" rel="noopener">{p.name}</a>
+		))}
+		{
+			wechatQr && (
+				<details class="share-wechat">
+					<summary class="share-chip">{t('share.wechat')}</summary>
+					<div class="share-qr">
+						<Fragment set:html={wechatQr} />
+						<p>{t('share.wechatHint')}</p>
+					</div>
+				</details>
+			)
+		}
+	</div>
+</div>
+
+<script>
+	function init() {
+		document.querySelectorAll<HTMLElement>('.share').forEach((root) => {
+			const url = root.dataset.url ?? location.href;
+			const title = root.dataset.title ?? document.title;
+
+			const copyBtn = root.querySelector<HTMLButtonElement>('[data-share-copy]');
+			if (copyBtn && !copyBtn.dataset.bound) {
+				copyBtn.dataset.bound = '1';
+				const original = copyBtn.textContent;
+				copyBtn.addEventListener('click', async () => {
+					try {
+						await navigator.clipboard.writeText(url);
+						copyBtn.textContent = copyBtn.dataset.copied ?? 'Copied ✓';
+						setTimeout(() => (copyBtn.textContent = original), 1800);
+					} catch {}
+				});
+			}
+
+			const nativeBtn = root.querySelector<HTMLButtonElement>('[data-share-native]');
+			if (nativeBtn && 'share' in navigator) {
+				nativeBtn.hidden = false;
+				if (!nativeBtn.dataset.bound) {
+					nativeBtn.dataset.bound = '1';
+					nativeBtn.addEventListener('click', () => navigator.share({ title, url }).catch(() => {}));
+				}
+			}
+		});
+	}
+	init();
+</script>
