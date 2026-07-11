@@ -4,11 +4,23 @@ import { useTranslations, type Lang } from '../i18n/utils';
 const lang = (Astro.currentLocale ?? 'en') as Lang;
 const t = useTranslations(lang);
 const today = new Date();
+const ccUrl =
+	lang === 'zh'
+		? 'https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans'
+		: 'https://creativecommons.org/licenses/by-nc-sa/4.0/';
 ---
 
 <footer class="site-footer">
 	<div class="wrap colophon">
-		<p>{t('footer.colophon')} &copy; {today.getFullYear()} Andrew Xie (谢杨浩)</p>
+		<p>
+			&copy; {today.getFullYear()} Andrew Xie (谢杨浩) ·
+			{t('footer.license.pre')}
+			<a href={ccUrl} target="_blank" rel="license noopener">CC BY-NC-SA 4.0</a>
+			·
+			<a href="https://github.com/scv057/scv-blog" target="_blank" rel="noopener"
+				>{t('footer.source')}</a
+			>
+		</p>
 		<nav class="foot-links" aria-label="Elsewhere">
 			<a href="/rss.xml">{t('footer.rss')}</a>
 			<a href="https://github.com/scv057" target="_blank" rel="me noopener">GitHub</a>

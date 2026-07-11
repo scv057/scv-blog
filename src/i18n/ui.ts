@@ -45,8 +45,8 @@ export const ui = {
 		'byline.minRead': 'min read',
 		'byline.updated': 'Updated',
 
-		'footer.colophon':
-			'Set in a system old-style serif with a monospace for labels. Written by hand, built with Astro, and kept deliberately quiet.',
+		'footer.license.pre': 'Content licensed under',
+		'footer.source': 'Source',
 		'footer.rss': 'RSS',
 
 		'aside.topics': 'Topics',
@@ -112,8 +112,8 @@ export const ui = {
 		'byline.minRead': '分钟阅读',
 		'byline.updated': '更新于',
 
-		'footer.colophon':
-			'西文用系统老式衬线,标签用等宽字体;中文取宋体系。手写代码,用 Astro 构建,刻意保持安静。',
+		'footer.license.pre': '文章采用',
+		'footer.source': '源码',
 		'footer.rss': 'RSS',
 
 		'aside.topics': '栏目',
