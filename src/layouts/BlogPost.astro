@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
+import type { MarkdownHeading } from 'astro';
 import Base from './Base.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import ShareLinks from '../components/ShareLinks.astro';
@@ -8,19 +9,38 @@ import Comments from '../components/Comments.astro';
 import PostNav, { type PostRef } from '../components/PostNav.astro';
 import { useTranslations, localizedPath, categoryLabel, type Lang } from '../i18n/utils';
 
-type Props = CollectionEntry<'blog'>['data'] & {
-	minutes?: number;
-	older?: PostRef | null;
-	newer?: PostRef | null;
-};
+type PostData = CollectionEntry<'blog'>['data'];
+// lang/category/draft are optional so non-collection pages (e.g. About) can use this layout
+type Props = Omit<PostData, 'lang' | 'category' | 'draft'> &
+	Partial<Pick<PostData, 'lang' | 'category' | 'draft'>> & {
+		minutes?: number;
+		older?: PostRef | null;
+		newer?: PostRef | null;
+		headings?: MarkdownHeading[];
+	};
 
-const { title, description, pubDate, updatedDate, heroImage, minutes, category, older, newer } =
-	Astro.props;
+const {
+	title,
+	description,
+	pubDate,
+	updatedDate,
+	heroImage,
+	minutes,
+	category,
+	older,
+	newer,
+	headings = [],
+} = Astro.props;
 const lang = (Astro.currentLocale ?? 'en') as Lang;
 const t = useTranslations(lang);
+
+// Only offer a TOC when there is enough structure to navigate
+const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+const showToc = toc.length >= 3;
 ---
 
 <Base title={title} description={description} image={heroImage}>
+	<div class="read-progress" aria-hidden="true"></div>
 	<main class="wrap article">
 		<article data-pagefind-body>
 			<header class="article-head">
@@ -60,6 +80,21 @@ const t = useTranslations(lang);
 
 			{heroImage && <Image class="hero" width={1200} height={600} src={heroImage} alt="" />}
 
+			{
+				showToc && (
+					<nav class="toc" aria-label={t('toc.label')}>
+						<span class="mono">{t('toc.label')}</span>
+						<ol>
+							{toc.map((h) => (
+								<li class={`toc-d${h.depth}`}>
+									<a href={`#${h.slug}`}>{h.text}</a>
+								</li>
+							))}
+						</ol>
+					</nav>
+				)
+			}
+
 			<div class="prose">
 				<slot />
 			</div>
@@ -71,4 +106,30 @@ const t = useTranslations(lang);
 			</div>
 		</article>
 	</main>
+
+	<script is:inline>
+		(function () {
+			var bar = document.querySelector('.read-progress');
+			if (!bar) return;
+			var ticking = false;
+			function update() {
+				ticking = false;
+				var doc = document.documentElement;
+				var max = doc.scrollHeight - window.innerHeight;
+				var p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+				bar.style.transform = 'scaleX(' + p + ')';
+			}
+			window.addEventListener(
+				'scroll',
+				function () {
+					if (!ticking) {
+						ticking = true;
+						requestAnimationFrame(update);
+					}
+				},
+				{ passive: true },
+			);
+			update();
+		})();
+	</script>
 </Base>

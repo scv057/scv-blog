@@ -19,6 +19,8 @@ const blog = defineCollection({
 			lang: z.enum(['en', 'zh']).default('en'),
 			// Editorial section this post belongs to
 			category: z.enum(CATEGORIES).default('essay'),
+			// Drafts are visible in dev but excluded from production builds
+			draft: z.boolean().default(false),
 		}),
 });
 

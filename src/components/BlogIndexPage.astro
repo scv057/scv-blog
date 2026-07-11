@@ -1,8 +1,8 @@
 ---
-import { getCollection } from 'astro:content';
 import FormattedDate from './FormattedDate.astro';
 import { useTranslations, localizedPath, categoryLabel, type Lang } from '../i18n/utils';
 import type { Category } from '../consts';
+import { getPosts } from '../lib/posts';
 
 interface Props {
 	/** When set, only show posts in this category (topic archive mode). */
@@ -13,13 +13,7 @@ const { category } = Astro.props;
 const lang = (Astro.currentLocale ?? 'en') as Lang;
 const t = useTranslations(lang);
 
-const posts = (
-	await getCollection(
-		'blog',
-		({ data }) =>
-			(data.lang ?? 'en') === lang && (!category || data.category === category),
-	)
-).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const posts = await getPosts(lang, category);
 ---
 
 <main class="wrap">

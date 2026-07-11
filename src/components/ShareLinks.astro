@@ -60,7 +60,7 @@ const wechatQr =
 			data-copied-label={t('share.copied')}
 		>
 			<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d={icons.copy} /></svg>
-			<svg viewBox="0 0 24 24" aria-hidden="true" data-check hidden
+			<svg viewBox="0 0 24 24" aria-hidden="true" data-check
 				><path fill="currentColor" d={icons.check} /></svg
 			>
 		</button>
@@ -110,18 +110,13 @@ const wechatQr =
 			const copyBtn = root.querySelector<HTMLButtonElement>('[data-share-copy]');
 			if (copyBtn && !copyBtn.dataset.bound) {
 				copyBtn.dataset.bound = '1';
-				const [linkIcon, checkIcon] = copyBtn.querySelectorAll('svg');
 				const label = copyBtn.getAttribute('aria-label') ?? '';
 				copyBtn.addEventListener('click', async () => {
 					try {
 						await navigator.clipboard.writeText(url);
-						linkIcon.setAttribute('hidden', '');
-						checkIcon.removeAttribute('hidden');
 						copyBtn.classList.add('copied');
 						copyBtn.title = copyBtn.dataset.copiedLabel ?? '';
 						setTimeout(() => {
-							checkIcon.setAttribute('hidden', '');
-							linkIcon.removeAttribute('hidden');
 							copyBtn.classList.remove('copied');
 							copyBtn.title = label;
 						}, 1800);

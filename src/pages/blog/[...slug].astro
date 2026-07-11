@@ -1,12 +1,11 @@
 ---
-import { type CollectionEntry, getCollection, render } from 'astro:content';
+import { type CollectionEntry, render } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
 import type { PostRef } from '../../components/PostNav.astro';
+import { getPosts } from '../../lib/posts';
 
 export async function getStaticPaths() {
-	const posts = (await getCollection('blog', ({ data }) => (data.lang ?? 'en') === 'en')).sort(
-		(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-	);
+	const posts = await getPosts('en');
 	return posts.map((post, i) => ({
 		params: { slug: post.id },
 		props: {
@@ -23,12 +22,12 @@ type Props = {
 };
 
 const { post, newer, older } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 
 const words = (post.body ?? '').trim().split(/\s+/).filter(Boolean).length;
 const minutes = Math.max(1, Math.round(words / 200));
 ---
 
-<BlogPost {...post.data} minutes={minutes} older={older} newer={newer}>
+<BlogPost {...post.data} minutes={minutes} older={older} newer={newer} headings={headings}>
 	<Content />
 </BlogPost>
