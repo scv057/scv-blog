@@ -1,15 +1,13 @@
 ---
-import { getCollection } from 'astro:content';
 import FormattedDate from './FormattedDate.astro';
 import { useTranslations, localizedPath, categoryLabel, type Lang } from '../i18n/utils';
 import { CATEGORIES } from '../consts';
+import { getPosts } from '../lib/posts';
 
 const lang = (Astro.currentLocale ?? 'en') as Lang;
 const t = useTranslations(lang);
 
-const posts = (await getCollection('blog', ({ data }) => (data.lang ?? 'en') === lang)).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+const posts = await getPosts(lang);
 const [featured, ...rest] = posts;
 const recent = rest.slice(0, 5);
 const year = new Date().getFullYear();

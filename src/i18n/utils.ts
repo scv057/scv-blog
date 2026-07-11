@@ -1,5 +1,7 @@
 import { defaultLang, locales, ui, type Lang } from './ui';
 
+export type { Lang } from './ui';
+
 /** Derive the active language from a URL pathname (e.g. /zh/about -> 'zh'). */
 export function getLangFromUrl(url: URL): Lang {
 	const [, seg] = url.pathname.split('/');
